@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6", // or a higher version like es2017
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "outDir": "./dist", // Output directory for compiled files
+    "strict": true, // Enable all strict type-checking options
+    "moduleResolution": "node",
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"], // Adjust this to where your source files are located
+  "exclude": ["node_modules"]
+}
