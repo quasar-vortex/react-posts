@@ -79,13 +79,13 @@ const PostList = () => {
   return (
     <section className="flex-1">
       <div className="p-4 max-w-7xl mx-auto">
-        <div className="mb-4">
+        {/*  <div className="mb-4">
           <input
             type="text"
             name="search"
             className="w-full p-1 bg-violet-200 rounded-md outline-none"
           />
-        </div>
+        </div>*/}
         <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {posts.map((p) => {
             return (
