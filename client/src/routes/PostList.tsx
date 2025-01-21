@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { Post } from "../types/Post";
+import PostCard from "../components/PostCard";
+import SearchBar from "../components/SearchBar";
 
-type Post = {
-  id: number;
-  title: string;
-  content: string;
-};
 const PostList = () => {
   const nav = useNavigate();
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [searchText, setSearchText] = useState("");
   useEffect(() => {
     fetch("http://localhost:5000/posts", {
       method: "GET",
@@ -51,8 +50,11 @@ const PostList = () => {
         setIsError(true);
       });
   };
-  const editPostHandler = ({ id, title, content }: Post) => {
+  const onEditPostHandler = ({ id, title, content }: Post) => {
     nav(`/:postId/edit`, { state: { id, title, content } });
+  };
+  const onSearchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
   };
   if (isLoading)
     return (
@@ -79,39 +81,28 @@ const PostList = () => {
   return (
     <section className="flex-1">
       <div className="p-4 max-w-7xl mx-auto">
-        {/*  <div className="mb-4">
-          <input
-            type="text"
-            name="search"
-            className="w-full p-1 bg-violet-200 rounded-md outline-none"
-          />
-        </div>*/}
-        <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {posts.map((p) => {
-            return (
-              <li className="p-6 bg-violet-300 rounded-md" key={p.id}>
-                <div className="flex gap-4 items-center">
-                  <button
-                    onClick={() => editPostHandler(p)}
-                    className="bg-violet-600 px-4 py-2 rounded-md text-gray-200"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => onDeletePostHandler(p.id)}
-                    className="bg-red-600 px-4 py-2 rounded-md text-gray-200"
-                  >
-                    Delete
-                  </button>
-                </div>
+        <SearchBar onTextChange={onSearchHandler} />
 
-                <h2 className="text-lg text-violet-900 font-bold uppercase">
-                  {p.title}
-                </h2>
-                <p className="text-violet-800">{p.content}</p>
-              </li>
-            );
-          })}
+        <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {posts
+            .filter(
+              (p) =>
+                p.title
+                  .toLocaleLowerCase()
+                  .includes(searchText.toLocaleLowerCase()) ||
+                p.content
+                  .toLocaleLowerCase()
+                  .includes(searchText.toLocaleLowerCase())
+            )
+            .map((p) => {
+              return (
+                <PostCard
+                  onDelete={onDeletePostHandler}
+                  onEdit={onEditPostHandler}
+                  {...p}
+                />
+              );
+            })}
         </ul>
       </div>
     </section>
